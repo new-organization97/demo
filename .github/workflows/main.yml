@@ -97,7 +97,7 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "GITHUB_TOKEN=${{ secrets.TOKEN }}" >> $GITHUB_ENV
+          echo "TOKEN=${{ secrets.TOKEN }}" >> $GITHUB_ENV
           echo "GOOGLE_CREDS_PATH=google-creds.json" >> $GITHUB_ENV
           echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" > google-creds.json
 
