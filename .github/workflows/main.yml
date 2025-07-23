@@ -1,0 +1,130 @@
+name: GitHub Admin Tool
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: 'Action to perform'
+        required: true
+        type: choice
+        options:
+          - create-team
+          - delete-team
+          - add-repo
+          - remove-repo
+          - add-user
+          - remove-user
+          - create-repo
+          - delete-repo
+          - user-access
+          - list-teams
+          - list-repos
+          - list-orgs
+          - list-users
+          - list-users-access
+
+      org:
+        description: 'GitHub Organization'
+        required: false
+        type: choice
+        options:
+          - Pirai-Infotech
+          - pirai-java-tools
+          - pirai-research
+          - RapidX-Org
+          - Pirai-Xtro
+          - Pirai-AI
+          - Pirai-EMR
+          - Pirai-MBSB
+
+      team:
+        description: 'Team name (if applicable)'
+        required: false
+
+      repo:
+        description: 'Repository name (if applicable)'
+        required: false
+
+      user:
+        description: 'GitHub username (not email!)'
+        required: false
+
+      permission:
+        description: 'Permission level (if applicable)'
+        required: false
+        type: choice
+        options:
+          - nil
+          - pull
+          - triage
+          - push
+          - maintain
+          - admin
+
+      repo_name:
+        description: 'New repo name (for create-repo)'
+        required: false
+
+      repo_private:
+        description: 'Should repo be private?'
+        required: false
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+      verbose:
+        description: 'Enable verbose mode?'
+        required: false
+        type: choice
+        options:
+          - "false"
+          - "true"
+
+jobs:
+  github-admin:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set environment variables
+        run: |
+          echo "GITHUB_TOKEN=${{ secrets.GH_ADMIN_TOKEN }}" >> $GITHUB_ENV
+          echo "GOOGLE_CREDS_PATH=google-creds.json" >> $GITHUB_ENV
+          echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" > google-creds.json
+
+      - name: Run GitHub Admin Tool
+        run: |
+          ARGS="--action ${{ github.event.inputs.action }}"
+
+          [[ "${{ github.event.inputs.org }}" != "" ]] && ARGS="$ARGS --org '${{ github.event.inputs.org }}'"
+          [[ "${{ github.event.inputs.team }}" != "" ]] && ARGS="$ARGS --team '${{ github.event.inputs.team }}'"
+          [[ "${{ github.event.inputs.repo }}" != "" ]] && ARGS="$ARGS --repo '${{ github.event.inputs.repo }}'"
+          [[ "${{ github.event.inputs.user }}" != "" ]] && ARGS="$ARGS --user '${{ github.event.inputs.user }}'"
+          [[ "${{ github.event.inputs.permission }}" != "nil" && "${{ github.event.inputs.permission }}" != "" ]] && ARGS="$ARGS --permission '${{ github.event.inputs.permission }}'"
+          [[ "${{ github.event.inputs.repo_name }}" != "" ]] && ARGS="$ARGS --repo-name '${{ github.event.inputs.repo_name }}'"
+          [[ "${{ github.event.inputs.repo_private }}" == "true" ]] && ARGS="$ARGS --repo-private"
+          [[ "${{ github.event.inputs.verbose }}" == "true" ]] && ARGS="$ARGS --verbose"
+
+          echo "Running: python3 scripts/github.py $ARGS"
+          python3 scripts/github.py $ARGS
+
+      - name: Clean up credentials
+        if: always()
+        run: rm -f google-creds.json
+ 
