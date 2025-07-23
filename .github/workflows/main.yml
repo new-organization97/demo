@@ -66,14 +66,7 @@ on:
           - "false"
           - "true"
 
-      verbose:
-        description: 'Enable verbose mode?'
-        required: false
-        type: choice
-        options:
-          - "false"
-          - "true"
-
+    
 jobs:
   github-admin:
     runs-on: ubuntu-latest
@@ -102,22 +95,56 @@ jobs:
           echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" > google-creds.json
 
       - name: Run GitHub Admin Tool
-        run: |
-          ARGS="--action ${{ github.event.inputs.action }}"
+  run: |
+    # Initialize ARGS string safely
+    CMD_ARGS=""
 
-          [[ "${{ github.event.inputs.org }}" != "" ]] && ARGS="$ARGS --org '${{ github.event.inputs.org }}'"
-          [[ "${{ github.event.inputs.team }}" != "" ]] && ARGS="$ARGS --team '${{ github.event.inputs.team }}'"
-          [[ "${{ github.event.inputs.repo }}" != "" ]] && ARGS="$ARGS --repo '${{ github.event.inputs.repo }}'"
-          [[ "${{ github.event.inputs.user }}" != "" ]] && ARGS="$ARGS --user '${{ github.event.inputs.user }}'"
-          [[ "${{ github.event.inputs.permission }}" != "nil" && "${{ github.event.inputs.permission }}" != "" ]] && ARGS="$ARGS --permission $PERMISSION" '${{ github.event.inputs.permission }}'"
-          [[ "${{ github.event.inputs.repo_name }}" != "" ]] && ARGS="$ARGS --repo-name '${{ github.event.inputs.repo_name }}'"
-          [[ "${{ github.event.inputs.repo_private }}" == "true" ]] && ARGS="$ARGS --repo-private"
-          [[ "${{ github.event.inputs.verbose }}" == "true" ]] && ARGS="$ARGS --verbose"
+    # Always add --action
+    CMD_ARGS+="--action \"${{ github.event.inputs.action }}\""
 
-          echo "Running: python3 scripts/github.py $ARGS"
-          python3 github.py $ARGS
+    # Conditionally add other arguments, using double quotes for robustness
+    # This ensures that values with spaces are treated as single arguments
+    # and prevents issues with empty strings.
 
-      - name: Clean up credentials
-        if: always()
-        run: rm -f google-creds.json
- 
+    # --org argument
+    if [[ -n "${{ github.event.inputs.org }}" ]]; then
+      CMD_ARGS+=" --org \"${{ github.event.inputs.org }}\""
+    fi
+
+    # --team argument
+    if [[ -n "${{ github.event.inputs.team }}" ]]; then
+      CMD_ARGS+=" --team \"${{ github.event.inputs.team }}\""
+    fi
+
+    # --repo argument
+    if [[ -n "${{ github.event.inputs.repo }}" ]]; then
+      CMD_ARGS+=" --repo \"${{ github.event.inputs.repo }}\""
+    fi
+
+    # --user argument
+    if [[ -n "${{ github.event.inputs.user }}" ]]; then
+      CMD_ARGS+=" --user \"${{ github.event.inputs.user }}\""
+    fi
+
+    # --permission argument (corrected syntax)
+    # Check if not 'nil' and not empty
+    if [[ "${{ github.event.inputs.permission }}" != "nil" && -n "${{ github.event.inputs.permission }}" ]]; then
+      CMD_ARGS+=" --permission \"${{ github.event.inputs.permission }}\""
+    fi
+
+    # --repo-name argument
+    if [[ -n "${{ github.event.inputs.repo_name }}" ]]; then
+      CMD_ARGS+=" --repo-name \"${{ github.event.inputs.repo_name }}\""
+    fi
+
+    # --repo-private flag (only add if 'true')
+    if [[ "${{ github.event.inputs.repo_private }}" == "true" ]]; then
+      CMD_ARGS+=" --repo-private"
+    fi
+
+    echo "Running: python3 git-manager.py ${CMD_ARGS}"
+    python3 git-manager.py ${CMD_ARGS}
+
+- name: Clean up credentials
+  if: always()
+  run: rm -f google-creds.json
