@@ -66,6 +66,8 @@ on:
           - "false"
           - "true"
 
+      
+
 jobs:
   github-admin:
     runs-on: ubuntu-latest
@@ -94,56 +96,58 @@ jobs:
           echo "${{ secrets.GOOGLE_CREDENTIALS_JSON }}" > google-creds.json
 
       - name: Run GitHub Admin Tool
-  run: |
-    # Initialize ARGS string safely
-    CMD_ARGS=""
+        run: |
+          # Initialize ARGS string safely
+          CMD_ARGS=""
 
-    # Always add --action
-    CMD_ARGS+="--action \"${{ github.event.inputs.action }}\""
+          # Always add --action
+          CMD_ARGS+="--action \"${{ github.event.inputs.action }}\""
 
-    # Conditionally add other arguments, using double quotes for robustness
-    # This ensures that values with spaces are treated as single arguments
-    # and prevents issues with empty strings.
+          # Conditionally add other arguments, using double quotes for robustness
+          # This ensures that values with spaces are treated as single arguments
+          # and prevents issues with empty strings.
 
-    # --org argument
-    if [[ -n "${{ github.event.inputs.org }}" ]]; then
-      CMD_ARGS+=" --org \"${{ github.event.inputs.org }}\""
-    fi
+          # --org argument
+          if [[ -n "${{ github.event.inputs.org }}" ]]; then
+            CMD_ARGS+=" --org \"${{ github.event.inputs.org }}\""
+          fi
 
-    # --team argument
-    if [[ -n "${{ github.event.inputs.team }}" ]]; then
-      CMD_ARGS+=" --team \"${{ github.event.inputs.team }}\""
-    fi
+          # --team argument
+          if [[ -n "${{ github.event.inputs.team }}" ]]; then
+            CMD_ARGS+=" --team \"${{ github.event.inputs.team }}\""
+          fi
 
-    # --repo argument
-    if [[ -n "${{ github.event.inputs.repo }}" ]]; then
-      CMD_ARGS+=" --repo \"${{ github.event.inputs.repo }}\""
-    fi
+          # --repo argument
+          if [[ -n "${{ github.event.inputs.repo }}" ]]; then
+            CMD_ARGS+=" --repo \"${{ github.event.inputs.repo }}\""
+          fi
 
-    # --user argument
-    if [[ -n "${{ github.event.inputs.user }}" ]]; then
-      CMD_ARGS+=" --user \"${{ github.event.inputs.user }}\""
-    fi
+          # --user argument
+          if [[ -n "${{ github.event.inputs.user }}" ]]; then
+            CMD_ARGS+=" --user \"${{ github.event.inputs.user }}\""
+          fi
 
-    # --permission argument (corrected syntax)
-    # Check if not 'nil' and not empty
-    if [[ "${{ github.event.inputs.permission }}" != "nil" && -n "${{ github.event.inputs.permission }}" ]]; then
-      CMD_ARGS+=" --permission \"${{ github.event.inputs.permission }}\""
-    fi
+          # --permission argument (corrected syntax)
+          # Check if not 'nil' and not empty
+          if [[ "${{ github.event.inputs.permission }}" != "nil" && -n "${{ github.event.inputs.permission }}" ]]; then
+            CMD_ARGS+=" --permission \"${{ github.event.inputs.permission }}\""
+          fi
 
-    # --repo-name argument
-    if [[ -n "${{ github.event.inputs.repo_name }}" ]]; then
-      CMD_ARGS+=" --repo-name \"${{ github.event.inputs.repo_name }}\""
-    fi
+          # --repo-name argument
+          if [[ -n "${{ github.event.inputs.repo_name }}" ]]; then
+            CMD_ARGS+=" --repo-name \"${{ github.event.inputs.repo_name }}\""
+          fi
 
-    # --repo-private flag (only add if 'true')
-    if [[ "${{ github.event.inputs.repo_private }}" == "true" ]]; then
-      CMD_ARGS+=" --repo-private"
-    fi
+          # --repo-private flag (only add if 'true')
+          if [[ "${{ github.event.inputs.repo_private }}" == "true" ]]; then
+            CMD_ARGS+=" --repo-private"
+          fi
 
-    echo "Running: python3 git-manager.py ${CMD_ARGS}"
-    python3 git-manager.py ${CMD_ARGS}
+          # Removed --verbose flag logic here
 
-- name: Clean up credentials
-  if: always()
-  run: rm -f google-creds.json
+          echo "Running: python3 git-manager.py ${CMD_ARGS}"
+          python3 git-manager.py ${CMD_ARGS}
+
+      - name: Clean up credentials
+        if: always()
+        run: rm -f google-creds.json
