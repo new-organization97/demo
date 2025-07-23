@@ -61,8 +61,8 @@ on:
         required: false
         type: choice
         options:
-          - "public"  
-          - "private" 
+          - public  
+          - private 
 
 jobs:
   github-admin:
