@@ -115,7 +115,7 @@ jobs:
           [[ "${{ github.event.inputs.verbose }}" == "true" ]] && ARGS="$ARGS --verbose"
 
           echo "Running: python3 scripts/github.py $ARGS"
-          python3 scripts/github.py $ARGS
+          python3 github.py $ARGS
 
       - name: Clean up credentials
         if: always()
