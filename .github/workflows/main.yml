@@ -109,7 +109,7 @@ jobs:
           [[ "${{ github.event.inputs.team }}" != "" ]] && ARGS="$ARGS --team '${{ github.event.inputs.team }}'"
           [[ "${{ github.event.inputs.repo }}" != "" ]] && ARGS="$ARGS --repo '${{ github.event.inputs.repo }}'"
           [[ "${{ github.event.inputs.user }}" != "" ]] && ARGS="$ARGS --user '${{ github.event.inputs.user }}'"
-          [[ "${{ github.event.inputs.permission }}" != "nil" && "${{ github.event.inputs.permission }}" != "" ]] && ARGS="$ARGS --permission '${{ github.event.inputs.permission }}'"
+          [[ "${{ github.event.inputs.permission }}" != "nil" && "${{ github.event.inputs.permission }}" != "" ]] && ARGS="$ARGS --permission $PERMISSION" '${{ github.event.inputs.permission }}'"
           [[ "${{ github.event.inputs.repo_name }}" != "" ]] && ARGS="$ARGS --repo-name '${{ github.event.inputs.repo_name }}'"
           [[ "${{ github.event.inputs.repo_private }}" == "true" ]] && ARGS="$ARGS --repo-private"
           [[ "${{ github.event.inputs.verbose }}" == "true" ]] && ARGS="$ARGS --verbose"
