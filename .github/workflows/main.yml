@@ -66,7 +66,6 @@ on:
           - "false"
           - "true"
 
-    
 jobs:
   github-admin:
     runs-on: ubuntu-latest
