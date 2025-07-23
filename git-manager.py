@@ -17,7 +17,6 @@ if not github_token:
     sys.exit(1)
 
 # --- Excel Logging Configuration ---
-# Assuming the script is run from the root of the repo
 EXCEL_FILE_PATH = os.path.join("logs", "github_admin_log.xlsx")
 
 def log_action_to_excel(action_details: dict):
@@ -37,6 +36,7 @@ def log_action_to_excel(action_details: dict):
                 "Timestamp (IST)", "Action", "Organization", "Team", "Repository",
                 "User", "Permission", "New Repo Name", "Private Repo"
             ])
+            # REMOVED: The line to apply bold font to headers
             print(f"Created new Excel log file with headers: {EXCEL_FILE_PATH}")
 
         # Append the new row of data
@@ -61,9 +61,7 @@ def log_action_to_excel(action_details: dict):
         print(f"✅ Action logged successfully to {EXCEL_FILE_PATH}")
     except Exception as e:
         print(f"❌ Error logging action to Excel: {e}")
-        # Consider re-raising for critical errors or adding more robust error handling
-
-# --- End Excel Logging Configuration ---
+        
 
 
 class GitHubAPIManager:
