@@ -32,7 +32,7 @@ on:
 
       repo:
         description: 'Repository name (if applicable)'
-        required: true
+        required: false
         
 
       user: 
