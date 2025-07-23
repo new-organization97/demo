@@ -38,7 +38,7 @@ def log_action_to_excel(action_details: dict):
                 "User", "Permission", "New Repo Name", "Private Repo"
             ])
             # Apply bold style to headers (optional, but good for readability)
-            for cell in sheet[1]: # Iterate through cells in the first row
+            for cell in sheet[2]: 
                 cell.font = Font(bold=True)
             print(f"Created new Excel log file with headers: {EXCEL_FILE_PATH}")
 
