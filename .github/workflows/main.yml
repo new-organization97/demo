@@ -93,7 +93,7 @@ jobs:
           REPO: ${{ github.event.inputs.repo }}          
           PERMISSION: ${{ github.event.inputs.permission }}
           REPO_NAME: ${{ github.event.inputs.repo_name }}
-          REPO_PRIVATE: ${{ github.event.inputs.repo_private }}
+          REPO_PRIVATE: ${{ github.event.inputs.repo_private }} 
           
         run: |
           ARGS="--action \"$ACTION\" --org \"$ORG\""
@@ -107,3 +107,14 @@ jobs:
 
           echo "▶ Running script: python3 scripts/github_admin.py $ARGS"
           eval python3 git-manager.py $ARGS
+
+      - name: Commit and push Excel log
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "actions@github.com"
+          git add logs/github_admin_log.xlsx # Add the specific log file
+          # The '|| true' part ensures the workflow doesn't fail if there are no changes to commit
+          git commit -m "Auto-update: GitHub Admin Log for ${{ github.event.inputs.action }}" || echo "No changes to commit"
+          git push
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
