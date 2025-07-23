@@ -4,8 +4,8 @@ import sys
 import json
 import os
 import dotenv
-from openpyxl import Workbook, load_workbook
-from openpyxl.styles import Font
+from openpyxl import Workbook, load_workbook 
+from openpyxl.styles import Font 
 from datetime import datetime
 from typing import List, Optional
 
@@ -37,9 +37,6 @@ def log_action_to_excel(action_details: dict):
                 "Timestamp (IST)", "Action", "Organization", "Team", "Repository",
                 "User", "Permission", "New Repo Name", "Private Repo"
             ])
-            # Apply bold style to headers (optional, but good for readability)
-            for cell in sheet[2]: 
-                cell.font = Font(bold=True)
             print(f"Created new Excel log file with headers: {EXCEL_FILE_PATH}")
 
         # Append the new row of data
@@ -52,9 +49,7 @@ def log_action_to_excel(action_details: dict):
         user = action_details.get("user", "")
         permission = action_details.get("permission", "")
         repo_name = action_details.get("repo_name", "")
-        # This will be boolean, convert to string for excel. Ensure it's handled properly for logging.
-        # If it's a boolean False, str(False) is "False", which is fine.
-        repo_private = action_details.get("repo_private", False) 
+        repo_private = action_details.get("repo_private", "") # This will be boolean, convert to string for excel
 
         sheet.append([
             timestamp, action, org, team, repo,
@@ -149,7 +144,7 @@ class GitHubAPIManager:
         """Delete a team from an organization"""
         response = self.make_request("DELETE", f"/orgs/{org}/teams/{team_slug}")
         if response is not None:
-            print(f"✅ Deleted team '{team_slug}' in '{org}'") # Changed ❌ to ✅
+            print(f"❌ Deleted team '{team_slug}' in '{org}'")
             return True
         return False
 
@@ -166,7 +161,7 @@ class GitHubAPIManager:
         """Remove team from repository"""
         response = self.make_request("DELETE", f"/orgs/{org}/teams/{team_slug}/repos/{org}/{repo}")
         if response is not None:
-            print(f"✅ Removed team '{team_slug}' from repo '{repo}'") # Changed ❌ to ✅
+            print(f"❌ Removed team '{team_slug}' from repo '{repo}'")
             return True
         return False
 
@@ -182,7 +177,7 @@ class GitHubAPIManager:
         """Remove user from team"""
         response = self.make_request("DELETE", f"/orgs/{org}/teams/{team_slug}/memberships/{username}")
         if response is not None:
-            print(f"✅ Removed user '{username}' from team '{team_slug}' in '{org}'") # Changed ❌ to ✅
+            print(f"❌ Removed user '{username}' from team '{team_slug}' in '{org}'")
             return True
         return False
 
@@ -191,15 +186,14 @@ class GitHubAPIManager:
         data = {
             "name": repo_name,
             "description": description,
-            "private": private, # This `private` variable now directly receives the boolean from run_action
+            "private": private,
             "has_issues": True,
             "has_projects": True,
             "has_wiki": True
         }
         response = self.make_request("POST", f"/orgs/{org}/repos", data)
         if response:
-            # This line is already good, as `private` is a boolean
-            visibility = "private" if private else "public" 
+            visibility = "private" if private else "public"
             print(f"✅ Created {visibility} repo '{repo_name}' in '{org}'")
             return True
         return False
@@ -255,7 +249,7 @@ def run_action(args):
         "user": args.user if hasattr(args, 'user') else "",
         "permission": args.permission if hasattr(args, 'permission') else "",
         "repo_name": args.repo_name if hasattr(args, 'repo_name') else "",
-        "repo_private": (args.repo_private == "private") if hasattr(args, 'repo_private') and args.repo_private else False
+        "repo_private": args.repo_private if hasattr(args, 'repo_private') else False # Default to False if not set
     }
 
     if args.action == "list-orgs":
@@ -307,7 +301,6 @@ def run_action(args):
 
     elif args.action == "add-repo":
         if not all([args.team, args.repo, args.permission]):
-            # Corrected error message here
             print("--team, --repo, and --permission are required for add-repo")
             sys.exit(1)
         team_info = github.get_team_by_name(args.org, args.team)
@@ -326,6 +319,7 @@ def run_action(args):
         team_info = github.get_team_by_name(args.org, args.team)
         if team_info:
             if github.remove_team_from_repo(args.org, team_info['slug'], args.repo):
+                log_data["team_slug"] = team_info['slug'] # Add slug for logging if needed
                 log_action_to_excel(log_data)
         else:
             print(f"❌ Team '{args.team}' not found in '{args.org}'")
