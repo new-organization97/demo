@@ -93,7 +93,7 @@ jobs:
           REPO: ${{ github.event.inputs.repo }}          
           PERMISSION: ${{ github.event.inputs.permission }}
           REPO_NAME: ${{ github.event.inputs.repo_name }}
-          REPO_PRIVATE: ${{ github.event.inputs.repo_private }} 
+          REPO_PRIVATE: ${{ github.event.inputs.repo_private }} # This is now "public" or "private"
           
         run: |
           ARGS="--action \"$ACTION\" --org \"$ORG\""
@@ -103,9 +103,9 @@ jobs:
           [[ -n "$USER" ]] && ARGS="$ARGS --user \"$USER\""
           [[ "$PERMISSION" != "nil" && -n "$PERMISSION" ]] && ARGS="$ARGS --permission \"$PERMISSION\""
           [[ -n "$REPO_NAME" ]] && ARGS="$ARGS --repo-name \"$REPO_NAME\""
-          [[ "$REPO_PRIVATE" == "true" ]] && ARGS="$ARGS --repo-private"
+          # CORRECTED LINE: Check for "private" string
+          [[ "$REPO_PRIVATE" == "private" ]] && ARGS="$ARGS --repo-private" 
 
-          # CORRECTED: Ensure consistent script path here
           echo "▶ Running script: python3 git-manager.py $ARGS"
           eval python3 git-manager.py $ARGS
 
