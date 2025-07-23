@@ -56,13 +56,13 @@ on:
         description: 'New repo name (for create-repo)'
         required: false
 
-      repo_private:
-        description: 'Should repo be private?'
+     repo_private:
+        description: 'Repository visibility' 
         required: false
         type: choice
         options:
-          - "false"
-          - "true"
+          - "public"  
+          - "private" 
 
 jobs:
   github-admin:
