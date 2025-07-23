@@ -191,14 +191,15 @@ class GitHubAPIManager:
         data = {
             "name": repo_name,
             "description": description,
-            "private": private,
+            "private": private, # This `private` variable now directly receives the boolean from run_action
             "has_issues": True,
             "has_projects": True,
             "has_wiki": True
         }
         response = self.make_request("POST", f"/orgs/{org}/repos", data)
         if response:
-            visibility = "private" if private else "public"
+            # This line is already good, as `private` is a boolean
+            visibility = "private" if private else "public" 
             print(f"✅ Created {visibility} repo '{repo_name}' in '{org}'")
             return True
         return False
@@ -254,7 +255,7 @@ def run_action(args):
         "user": args.user if hasattr(args, 'user') else "",
         "permission": args.permission if hasattr(args, 'permission') else "",
         "repo_name": args.repo_name if hasattr(args, 'repo_name') else "",
-        "repo_private": args.repo_private if hasattr(args, 'repo_private') else False # Default to False if not set
+        "repo_private": (args.repo_private == "private") if hasattr(args, 'repo_private') and args.repo_private else False
     }
 
     if args.action == "list-orgs":
