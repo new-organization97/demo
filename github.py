@@ -14,9 +14,9 @@ from oauth2client.service_account import ServiceAccountCredentials
  
 dotenv.load_dotenv()
  
-github_token = os.getenv("GITHUB_TOKEN")
+github_token = os.getenv("TOKEN")
 if not github_token:
-    print("GITHUB_TOKEN environment variable is not set.")
+    print("TOKEN environment variable is not set.")
     sys.exit(1)
  
 class GitHubAPIManager:
@@ -164,7 +164,7 @@ class GitHubAPIManager:
         """Validate if GitHub user exists"""
         if "@" in username:
             print(f"❌ Email detected: '{username}' — GitHub API requires the GitHub username instead.")
-            print("👉 Please enter the GitHub username (e.g. 'pirai-santhosh'), not the email address.")
+            print("👉 Please enter the GitHub username (e.g. 'pirai-deepak'), not the email address.")
             return False
  
         response = self.make_request("GET", f"/users/{username}")
