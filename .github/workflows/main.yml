@@ -56,13 +56,13 @@ on:
         description: 'New repo name (for create-repo)'
         required: false
 
-     repo_private:
-        description: 'Repository visibility' 
+      repo_private:
+        description: 'Should repo be private?'
         required: false
         type: choice
         options:
-          - public  
-          - private 
+          - "false"
+          - "true"
 
 jobs:
   github-admin:
@@ -93,7 +93,7 @@ jobs:
           REPO: ${{ github.event.inputs.repo }}          
           PERMISSION: ${{ github.event.inputs.permission }}
           REPO_NAME: ${{ github.event.inputs.repo_name }}
-          REPO_PRIVATE: ${{ github.event.inputs.repo_private }} # This is now "public" or "private"
+          REPO_PRIVATE: ${{ github.event.inputs.repo_private }} 
           
         run: |
           ARGS="--action \"$ACTION\" --org \"$ORG\""
@@ -103,10 +103,9 @@ jobs:
           [[ -n "$USER" ]] && ARGS="$ARGS --user \"$USER\""
           [[ "$PERMISSION" != "nil" && -n "$PERMISSION" ]] && ARGS="$ARGS --permission \"$PERMISSION\""
           [[ -n "$REPO_NAME" ]] && ARGS="$ARGS --repo-name \"$REPO_NAME\""
-          # CORRECTED LINE: Check for "private" string
-          [[ "$REPO_PRIVATE" == "private" ]] && ARGS="$ARGS --repo-private" 
+          [[ "$REPO_PRIVATE" == "true" ]] && ARGS="$ARGS --repo-private"
 
-          echo "▶ Running script: python3 git-manager.py $ARGS"
+          echo "▶ Running script: python3 scripts/github_admin.py $ARGS"
           eval python3 git-manager.py $ARGS
 
       - name: Commit and push Excel log
