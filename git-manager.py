@@ -301,7 +301,7 @@ def run_action(args):
 
     elif args.action == "add-repo":
         if not all([args.team, args.repo, args.permission]):
-            print("--team, --repo-name, and --permission are required for add-repo")
+            print("--team, --repo, and --permission are required for add-repo")
             sys.exit(1)
         team_info = github.get_team_by_name(args.org, args.team)
         if team_info:
