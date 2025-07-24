@@ -81,7 +81,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt || true
+          pip install -r requirements.txt 
 
       - name: Run GitHub Admin Script
         env:
