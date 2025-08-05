@@ -104,8 +104,8 @@ jobs:
           [[ -n "$REPO_NAME" ]] && ARGS="$ARGS --repo-name \"$REPO_NAME\""
           [[ "$REPO_PRIVATE" == "true" ]] && ARGS="$ARGS --repo-private"
 
-          echo "▶ Running script: python3 scripts/github_admin.py $ARGS"
-          eval python3 git-manager.py $ARGS
+          echo "▶ Running script: python3 scripts/git-manager.py $ARGS"
+          eval python git-manager.py --action list-repos --org new-organization97 $ARGS
 
       - name: Commit and push Excel log
         run: |
