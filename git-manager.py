@@ -334,8 +334,6 @@ def run_action(args):
         if not team_info:
             print(f"❌ Team '{args.team}' not found in '{args.org}'")
             sys.exit(1)
-        
-        log_data["team_slug"] = team_info['slug'] # Add slug for logging if needed
 
         if args.action == "add-user":
             if github.add_user_to_team(args.org, team_info['slug'], args.user):
