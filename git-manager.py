@@ -8,7 +8,6 @@ from openpyxl.styles import Font
 from datetime import datetime
 from typing import List, Optional
 
-dotenv.load_dotenv()
 
 github_token = os.getenv("TOKEN")
 if not github_token:
