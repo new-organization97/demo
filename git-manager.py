@@ -304,7 +304,6 @@ def run_action(args):
         team_info = github.get_team_by_name(args.org, args.team)
         if team_info:
             if github.add_team_to_repo(args.org, team_info['slug'], args.repo, args.permission):
-                log_data["team_slug"] = team_info['slug'] # Add slug for logging if needed
                 log_action_to_excel(log_data)
         else:
             print(f"❌ Team '{args.team}' not found in '{args.org}'")
@@ -317,7 +316,6 @@ def run_action(args):
         team_info = github.get_team_by_name(args.org, args.team)
         if team_info:
             if github.remove_team_from_repo(args.org, team_info['slug'], args.repo):
-                log_data["team_slug"] = team_info['slug'] # Add slug for logging if needed
                 log_action_to_excel(log_data)
         else:
             print(f"❌ Team '{args.team}' not found in '{args.org}'")
