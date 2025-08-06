@@ -349,15 +349,6 @@ def run_action(args):
         if github.create_repo(args.org, args.repo_name, args.repo_private):
             log_action_to_excel(log_data)
 
-    elif args.action == "user-access":
-        if not args.user:
-            print("--user is required for user-access")
-            sys.exit(1)
-        if github.validate_user(args.user): # Validate user before proceeding
-            github.get_user_repo_access(args.org, args.user)
-        # Not typically logged to Excel as it's just a read operation,
-        # but you could if you wanted to track when reports are generated.
-
 def main():
     parser = argparse.ArgumentParser(description="GitHub Team and Repo Manager (Direct API)")
     
