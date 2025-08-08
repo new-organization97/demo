@@ -27,15 +27,8 @@ def log_action_to_excel(action_details: dict):
             workbook = load_workbook(EXCEL_FILE_PATH)
             sheet = workbook.active
         else:
-            workbook = Workbook()
-            sheet = workbook.active
-            # Add headers if it's a new file
-            sheet.append([
-                "Timestamp (IST)", "Action", "Organization", "Team", "Repository",
-                "User", "Permission", "New Repo Name", "Private Repo"
-            ])
-            # REMOVED: The line to apply bold font to headers
-            print(f"Created new Excel log file with headers: {EXCEL_FILE_PATH}")
+            print(f" Error: Excel log file not found at {EXCEL_FILE_PATH}. Script will exit.")
+            return
 
         # Append the new row of data
         # Ensure all possible keys are present, even if empty, to maintain column consistency
