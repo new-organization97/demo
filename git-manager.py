@@ -14,15 +14,12 @@ if not github_token:
     print("GITHUB_TOKEN environment variable is not set.")
     sys.exit(1)
 
-# --- Excel Logging Configuration ---
+# Excel Logging Configuration
 EXCEL_FILE_PATH = "logs/github_admin_log.xlsx"
 
 def log_action_to_excel(action_details: dict):
-    """
-    Appends action details to the Excel log file.
-    """
     try:
-        # Load the workbook or create a new one if it doesn't exist
+        # Load the workbook 
         if os.path.exists(EXCEL_FILE_PATH):
             workbook = load_workbook(EXCEL_FILE_PATH)
             sheet = workbook.active
