@@ -15,7 +15,7 @@ if not github_token:
     sys.exit(1)
 
 # --- Excel Logging Configuration ---
-EXCEL_FILE_PATH = os.path.join("logs", "github_admin_log.xlsx")
+EXCEL_FILE_PATH = "logs/github_admin_log.xlsx"
 
 def log_action_to_excel(action_details: dict):
     """
