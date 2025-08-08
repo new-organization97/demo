@@ -18,39 +18,33 @@ if not github_token:
 EXCEL_FILE_PATH = "logs/github_admin_log.xlsx"
 
 def log_action_to_excel(action_details: dict):
-    try:
-        # Load the workbook 
-        if os.path.exists(EXCEL_FILE_PATH):
-            workbook = load_workbook(EXCEL_FILE_PATH)
-            sheet = workbook.active
-        else:
-            print(f" Error: Excel log file not found at {EXCEL_FILE_PATH}. Script will exit.")
-            return
+    if os.path.exists(EXCEL_FILE_PATH):
+        workbook = load_workbook(EXCEL_FILE_PATH)
+        sheet = workbook.active
+    else:
+        print(f"❌ Error: Excel log file not found at {EXCEL_FILE_PATH}. Script will exit.")
+        return
 
-        # Append the new row of data
-        # Ensure all possible keys are present, even if empty, to maintain column consistency
-        timestamp = action_details.get("timestamp", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-        action = action_details.get("action", "")
-        org = action_details.get("org", "")
-        team = action_details.get("team", "")
-        repo = action_details.get("repo", "")
-        user = action_details.get("user", "")
-        permission = action_details.get("permission", "")
-        repo_name = action_details.get("repo_name", "")
-        repo_private = action_details.get("repo_private", "") # This will be boolean, convert to string for excel
+    # Append the new row of data
+    # Ensure all possible keys are present, even if empty, to maintain column consistency
+    timestamp = action_details.get("timestamp", datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+    action = action_details.get("action", "")
+    org = action_details.get("org", "")
+    team = action_details.get("team", "")
+    repo = action_details.get("repo", "")
+    user = action_details.get("user", "")
+    permission = action_details.get("permission", "")
+    repo_name = action_details.get("repo_name", "")
+    repo_private = action_details.get("repo_private", "") # This will be boolean, convert to string for excel
 
-        sheet.append([
-            timestamp, action, org, team, repo,
-            user, permission, repo_name, str(repo_private)
-        ])
+    sheet.append([
+        timestamp, action, org, team, repo,
+        user, permission, repo_name, str(repo_private)
+    ])
 
-        # Save the workbook
-        workbook.save(EXCEL_FILE_PATH)
-        print(f"✅ Action logged successfully to {EXCEL_FILE_PATH}")
-    except Exception as e:
-        print(f"❌ Error logging action to Excel: {e}")
-        
-
+    # Save the workbook
+    workbook.save(EXCEL_FILE_PATH)
+    print(f"✅ Action logged successfully to {EXCEL_FILE_PATH}")      
 
 class GitHubAPIManager:
     def __init__(self, token: str):
