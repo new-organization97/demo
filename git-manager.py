@@ -56,7 +56,7 @@ class GitHubAPIManager:
             "User-Agent": "GitHub-Manager-Script"
         }
 
-    def make_request(self, method: str, endpoint: str, data: dict = None) -> dict:
+    def make_request(self, method: str, endpoint: str, data: dict = None):
         """Make HTTP request to GitHub API"""
         url = f"{self.base_url}{endpoint}"
         
