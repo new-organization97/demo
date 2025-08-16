@@ -78,23 +78,9 @@ class GitHubAPIManager:
             
         return response.json() if response.text else {}
 
-    def list_orgs(self) -> List[str]:
-        """List organizations user is a member of"""
-        response = self.make_request("GET", "/user/memberships/orgs")
-        if response is None:
-            return []
-        return [org['organization']['login'] for org in response]
-
     def list_teams(self, org: str) -> List[dict]:
         """List teams in an organization"""
         response = self.make_request("GET", f"/orgs/{org}/teams")
-        if response is None:
-            return []
-        return response
-
-    def list_repos(self, org: str) -> List[dict]:
-        """List repositories in an organization"""
-        response = self.make_request("GET", f"/orgs/{org}/repos")
         if response is None:
             return []
         return response
@@ -180,23 +166,6 @@ class GitHubAPIManager:
         response = self.make_request("GET", f"/users/{username}")
         return response is not None
 
-    def get_user_repo_access(self, org: str, username: str) -> List[str]:
-        """Get list of repositories user has access to in organization"""
-        repos = self.list_repos(org)
-        access_repos = []
-
-        for repo in repos:
-            # Check if user is a collaborator
-            response = self.make_request("GET", f"/repos/{org}/{repo['name']}/collaborators/{username}")
-            if response is not None:
-                access_repos.append(repo['name'])
-
-        print(f"📆 User '{username}' has access to {len(access_repos)} repositories in '{org}':")
-        for repo in access_repos:
-            print(f"  - {repo}")
-        
-        return access_repos
-
     def get_team_by_name(self, org: str, team_name: str) -> Optional[dict]:
         """Find team by name and return team info"""
         teams = self.list_teams(org)
@@ -224,35 +193,7 @@ def run_action(args):
         "repo_private": args.repo_private if hasattr(args, 'repo_private') else False # Default to False if not set
     }
 
-    if args.action == "list-orgs":
-        orgs = github.list_orgs()
-        print("📋 Organizations:")
-        for org in orgs:
-            print(f"  - {org}")
-        # Not typically logged to Excel as it's just a read operation
-    
-    elif args.action == "list-teams":
-        teams = github.list_teams(args.org)
-        print(f"📋 Teams in organization '{args.org}':")
-        if teams:
-            for i, team in enumerate(teams, 1):
-                print(f"  {i}. {team['name']} (ID: {team['id']}, Slug: {team['slug']})")
-        else:
-            print("  No teams found.")
-        # Not typically logged to Excel as it's just a read operation
-
-    elif args.action == "list-repos":
-        repos = github.list_repos(args.org)
-        print(f"📋 Repositories in organization '{args.org}':")
-        if repos:
-            for i, repo in enumerate(repos, 1):
-                visibility = "🔒 Private" if repo['private'] else "🌐 Public"
-                print(f"  {i}. {repo['name']} ({visibility})")
-        else:
-            print("  No repositories found.")
-        # Not typically logged to Excel as it's just a read operation
-
-    elif args.action == "create-team":
+    if args.action == "create-team":
         if not args.team:
             print("--team is required for create-team")
             sys.exit(1)
@@ -329,8 +270,7 @@ def main():
     parser.add_argument("--action",
                         choices=[
                             "create-team", "delete-team", "add-repo", "remove-repo",
-                            "add-user", "remove-user", "create-repo", "user-access",
-                            "list-teams"
+                            "add-user", "remove-user", "create-repo"
                         ],
                         required=True,
                         help="Action to perform")
