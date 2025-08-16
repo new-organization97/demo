@@ -330,12 +330,12 @@ def main():
                         choices=[
                             "create-team", "delete-team", "add-repo", "remove-repo",
                             "add-user", "remove-user", "create-repo", "user-access",
-                            "list-teams", "list-repos", "list-orgs" # Added list actions
+                            "list-teams"
                         ],
                         required=True,
                         help="Action to perform")
     
-    parser.add_argument("--org", help="GitHub organization name")
+    parser.add_argument("--org", required=True, help="GitHub organization name")
     parser.add_argument("--team", help="Team name")
     parser.add_argument("--repo", help="Repository name")
     parser.add_argument("--user", help="GitHub username (not email!)")
@@ -347,11 +347,6 @@ def main():
     parser.add_argument("--repo-name", help="Name for new repository")
 
     args = parser.parse_args()
-    
-    # Check if org is required for the action
-    if args.action not in ["list-orgs"] and not args.org:
-        print(f"--org is required for {args.action}")
-        sys.exit(1)
     
     run_action(args)
 
