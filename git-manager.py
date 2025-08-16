@@ -78,14 +78,13 @@ class GitHubAPIManager:
             
         return response.json() if response.text else {}
 
-    def list_teams(self, org: str) -> List[dict]:
-        """List teams in an organization"""
+    def list_teams(self, org: str):
         response = self.make_request("GET", f"/orgs/{org}/teams")
         if response is None:
             return []
         return response
 
-    def create_team(self, org: str, team_name: str, description: str = "") -> bool:
+    def create_team(self, org: str, team_name: str, description: str = ""):
         """Create a team in an organization"""
         data = {
             "name": team_name,
@@ -98,7 +97,7 @@ class GitHubAPIManager:
             return True
         return False
 
-    def delete_team(self, org: str, team_slug: str) -> bool:
+    def delete_team(self, org: str, team_slug: str):
         """Delete a team from an organization"""
         response = self.make_request("DELETE", f"/orgs/{org}/teams/{team_slug}")
         if response is not None:
@@ -106,7 +105,7 @@ class GitHubAPIManager:
             return True
         return False
 
-    def add_team_to_repo(self, org: str, team_slug: str, repo: str, permission: str) -> bool:
+    def add_team_to_repo(self, org: str, team_slug: str, repo: str, permission: str):
         """Add team to repository with specific permission"""
         data = {"permission": permission}
         response = self.make_request("PUT", f"/orgs/{org}/teams/{team_slug}/repos/{org}/{repo}", data)
@@ -115,7 +114,7 @@ class GitHubAPIManager:
             return True
         return False
 
-    def remove_team_from_repo(self, org: str, team_slug: str, repo: str) -> bool:
+    def remove_team_from_repo(self, org: str, team_slug: str, repo: str):
         """Remove team from repository"""
         response = self.make_request("DELETE", f"/orgs/{org}/teams/{team_slug}/repos/{org}/{repo}")
         if response is not None:
@@ -123,7 +122,7 @@ class GitHubAPIManager:
             return True
         return False
 
-    def add_user_to_team(self, org: str, team_slug: str, username: str) -> bool:
+    def add_user_to_team(self, org: str, team_slug: str, username: str):
         """Add user to team"""
         response = self.make_request("PUT", f"/orgs/{org}/teams/{team_slug}/memberships/{username}")
         if response:
@@ -131,7 +130,7 @@ class GitHubAPIManager:
             return True
         return False
 
-    def remove_user_from_team(self, org: str, team_slug: str, username: str) -> bool:
+    def remove_user_from_team(self, org: str, team_slug: str, username: str):
         """Remove user from team"""
         response = self.make_request("DELETE", f"/orgs/{org}/teams/{team_slug}/memberships/{username}")
         if response is not None:
@@ -139,7 +138,7 @@ class GitHubAPIManager:
             return True
         return False
 
-    def create_repo(self, org: str, repo_name: str, private: bool = False, description: str = "") -> bool:
+    def create_repo(self, org: str, repo_name: str, private: bool = False, description: str = ""):
         """Create repository in organization"""
         data = {
             "name": repo_name,
@@ -156,7 +155,7 @@ class GitHubAPIManager:
             return True
         return False
 
-    def validate_user(self, username: str) -> bool:
+    def validate_user(self, username: str):
         """Validate if GitHub user exists"""
         if "@" in username:
             print(f"❌ Email detected: '{username}' — GitHub API requires the GitHub username instead.")
@@ -166,7 +165,7 @@ class GitHubAPIManager:
         response = self.make_request("GET", f"/users/{username}")
         return response is not None
 
-    def get_team_by_name(self, org: str, team_name: str) -> Optional[dict]:
+    def get_team_by_name(self, org: str, team_name: str):
         """Find team by name and return team info"""
         teams = self.list_teams(org)
         for team in teams:
