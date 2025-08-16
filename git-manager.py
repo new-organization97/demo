@@ -60,31 +60,23 @@ class GitHubAPIManager:
         """Make HTTP request to GitHub API"""
         url = f"{self.base_url}{endpoint}"
         
-        try:
-            if method.upper() == "GET":
-                response = requests.get(url, headers=self.headers)
-            elif method.upper() == "POST":
-                response = requests.post(url, headers=self.headers, json=data)
-            elif method.upper() == "PUT":
-                response = requests.put(url, headers=self.headers, json=data)
-            elif method.upper() == "DELETE":
-                response = requests.delete(url, headers=self.headers)
-            else:
-                raise ValueError(f"Unsupported HTTP method: {method}")
+        if method.upper() == "GET":
+            response = requests.get(url, headers=self.headers)
+        elif method.upper() == "POST":
+            response = requests.post(url, headers=self.headers, json=data)
+        elif method.upper() == "PUT":
+            response = requests.put(url, headers=self.headers, json=data)
+        elif method.upper() == "DELETE":
+            response = requests.delete(url, headers=self.headers)
+        else:
+            raise ValueError(f"Unsupported HTTP method: {method}")
             
-            if response.status_code not in [200, 201, 204]:
-                error_msg = response.json().get('message', 'Unknown error') if response.text else 'No response'
-                print(f"❌ API Error ({response.status_code}): {error_msg}")
-                return None
-            
-            return response.json() if response.text else {}
-            
-        except requests.exceptions.RequestException as e:
-            print(f"❌ Request failed: {str(e)}")
+        if response.status_code not in [200, 201, 204]:
+            error_msg = response.json().get('message', 'Unknown error') if response.text else 'No response'
+            print(f"❌ API Error ({response.status_code}): {error_msg}")
             return None
-        except json.JSONDecodeError:
-            print(f"❌ Invalid JSON response")
-            return None
+            
+        return response.json() if response.text else {}
 
     def list_orgs(self) -> List[str]:
         """List organizations user is a member of"""
