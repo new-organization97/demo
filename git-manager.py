@@ -84,11 +84,10 @@ class GitHubAPIManager:
             return []
         return response
 
-    def create_team(self, org: str, team_name: str, description: str = ""):
+    def create_team(self, org: str, team_name: str):
         """Create a team in an organization"""
         data = {
             "name": team_name,
-            "description": description,
             "privacy": "closed"  
         }
         response = self.make_request("POST", f"/orgs/{org}/teams", data)
