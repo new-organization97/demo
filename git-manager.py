@@ -137,15 +137,11 @@ class GitHubAPIManager:
             return True
         return False
 
-    def create_repo(self, org: str, repo_name: str, private: bool = False, description: str = ""):
+    def create_repo(self, org: str, repo_name: str, private: bool = False):
         """Create repository in organization"""
         data = {
             "name": repo_name,
-            "description": description,
             "private": private,
-            "has_issues": True,
-            "has_projects": True,
-            "has_wiki": True
         }
         response = self.make_request("POST", f"/orgs/{org}/repos", data)
         if response:
