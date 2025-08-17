@@ -259,26 +259,23 @@ def run_action(args):
             log_action_to_excel(log_data)
 
 def main():
-    parser = argparse.ArgumentParser(description="GitHub Team and Repo Manager (Direct API)")
+    parser = argparse.ArgumentParser()
     
     parser.add_argument("--action",
                         choices=[
                             "create-team", "delete-team", "add-repo", "remove-repo",
                             "add-user", "remove-user", "create-repo"
                         ],
-                        required=True,
-                        help="Action to perform")
+                        required=True,)
     
-    parser.add_argument("--org", required=True, help="GitHub organization name")
-    parser.add_argument("--team", help="Team name")
-    parser.add_argument("--repo", help="Repository name")
-    parser.add_argument("--user", help="GitHub username (not email!)")
+    parser.add_argument("--org", required=True)
+    parser.add_argument("--team")
+    parser.add_argument("--repo")
+    parser.add_argument("--user")
     parser.add_argument("--permission",
-                        choices=["pull", "triage", "push", "maintain", "admin"],
-                        help="Permission level for team access to repository")
-    parser.add_argument("--repo-private", action="store_true",
-                        help="Create repository as private (default is public)")
-    parser.add_argument("--repo-name", help="Name for new repository")
+                        choices=["pull", "triage", "push", "maintain", "admin"])
+    parser.add_argument("--repo-private", action="store_true")
+    parser.add_argument("--repo-name")
 
     args = parser.parse_args()
     
