@@ -95,14 +95,15 @@ jobs:
           REPO_PRIVATE: ${{ github.event.inputs.repo_private }} 
           
         run: |
-          ARGS="--action \"$ACTION\" --org \"$ORG\""
+          ARGS="--action $ACTION --org $ORG"
 
-          [[ -n "$TEAM" ]] && ARGS="$ARGS --team \"$TEAM\""
-          [[ -n "$REPO" ]] && ARGS="$ARGS --repo \"$REPO\""
-          [[ -n "$USER" ]] && ARGS="$ARGS --user \"$USER\""
-          [[ "$PERMISSION" != "nil" && -n "$PERMISSION" ]] && ARGS="$ARGS --permission \"$PERMISSION\""
-          [[ -n "$REPO_NAME" ]] && ARGS="$ARGS --repo-name \"$REPO_NAME\""
+          [[ -n "$TEAM" ]] && ARGS="$ARGS --team $TEAM"
+          [[ -n "$REPO" ]] && ARGS="$ARGS --repo $REPO"
+          [[ -n "$USER" ]] && ARGS="$ARGS --user $USER"
+          [[ "$PERMISSION" != "nil" && -n "$PERMISSION" ]] && ARGS="$ARGS --permission $PERMISSION"
+          [[ -n "$REPO_NAME" ]] && ARGS="$ARGS --repo-name $REPO_NAME"
           [[ "$REPO_PRIVATE" == "true" ]] && ARGS="$ARGS --repo-private"
+
 
           echo "▶ Running script: python3 scripts/git-manager.py $ARGS"
           python git-manager.py $ARGS
