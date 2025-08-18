@@ -103,7 +103,7 @@ jobs:
           [[ "$REPO_PRIVATE" == "true" ]] && ARGS="$ARGS --repo-private"
 
 
-          echo "▶ Running script: python3 scripts/git-manager.py $ARGS"
+          echo "▶ Running script: python scripts/git-manager.py $ARGS"
           python git-manager.py $ARGS
 
       - name: Commit and push Excel log
