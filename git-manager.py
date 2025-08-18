@@ -6,7 +6,6 @@ import os
 from openpyxl import Workbook, load_workbook 
 from openpyxl.styles import Font 
 from datetime import datetime
-from typing import List, Optional
 
 
 github_token = os.getenv("TOKEN")
