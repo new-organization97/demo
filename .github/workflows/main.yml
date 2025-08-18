@@ -15,7 +15,6 @@ on:
           - add-user
           - remove-user
           - create-repo
-          - user-access
 
       org:
         description: 'GitHub Organization'
@@ -47,7 +46,6 @@ on:
         options:
           - nil
           - pull
-          - triage
           - push
           - maintain
           - admin
