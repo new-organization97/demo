@@ -50,9 +50,7 @@ class GitHubAPIManager:
         self.token = token
         self.base_url = "https://api.github.com"
         self.headers = {
-            "Authorization": f"token {token}",
-            "Accept": "application/vnd.github.v3+json",
-            "User-Agent": "GitHub-Manager-Script"
+            "Authorization": f"token {token}"
         }
 
     def make_request(self, method: str, endpoint: str, data: dict = None):
