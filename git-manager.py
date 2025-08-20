@@ -181,7 +181,7 @@ def run_action(args):
         "user": args.user if hasattr(args, 'user') else "",
         "permission": args.permission if hasattr(args, 'permission') else "",
         "repo_name": args.repo_name if hasattr(args, 'repo_name') else "",
-        "repo_private": args.repo_private if hasattr(args, 'repo_private') else False # Default to False if not set
+        "repo_private": args.repo_private if hasattr(args, 'repo_private') else False
     }
 
     if args.action == "create-team":
