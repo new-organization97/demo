@@ -150,7 +150,7 @@ class GitHubAPIManager:
         """Validate if GitHub user exists"""
         if "@" in username:
             print(f"❌ Email detected: '{username}' — GitHub API requires the GitHub username instead.")
-            print("👉 Please enter the GitHub username (e.g. 'pirai-santhosh'), not the email address.")
+            print("👉 Please enter the GitHub username (e.g. 'pirai-deepak'), not the email address.")
             return False
 
         response = self.make_request("GET", f"/users/{username}")
