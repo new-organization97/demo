@@ -3,8 +3,7 @@ import requests
 import sys
 import json
 import os
-from openpyxl import Workbook, load_workbook 
-from openpyxl.styles import Font 
+from openpyxl import Workbook, load_workbook  
 from datetime import datetime
 
 
